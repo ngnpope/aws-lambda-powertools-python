@@ -382,7 +382,7 @@ def test_logger_level_env_var_as_int(monkeypatch, service_name):
     # THEN Logger should propagate ValueError
     # since env vars can only be string
     # and '50' is not a correct log level
-    monkeypatch.setenv("LOG_LEVEL", 50)
+    monkeypatch.setenv("LOG_LEVEL", "50")
     with pytest.raises(ValueError, match="Unknown level: '50'"):
         Logger(service=service_name)
 
