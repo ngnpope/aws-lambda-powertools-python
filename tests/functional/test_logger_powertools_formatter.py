@@ -11,6 +11,7 @@ import pytest
 
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.logging.formatters.datadog import DatadogLogFormatter
+from aws_lambda_powertools.shared import constants
 
 
 @pytest.fixture
@@ -299,7 +300,7 @@ def test_log_formatting(stdout, service_name):
 
 def test_log_json_indent_compact_indent(stdout, service_name, monkeypatch):
     # GIVEN a logger with default settings and WHEN POWERTOOLS_DEV is not set
-    monkeypatch.delenv(name="POWERTOOLS_DEV", raising=False)
+    monkeypatch.delenv(name=constants.POWERTOOLS_DEV_ENV, raising=False)
     logger = Logger(service=service_name, stream=stdout)
     logger.info("Test message")
     # THEN the json should not have multiple lines
@@ -309,7 +310,7 @@ def test_log_json_indent_compact_indent(stdout, service_name, monkeypatch):
 
 def test_log_json_pretty_indent(stdout, service_name, monkeypatch):
     # GIVEN a logger with default settings and WHEN POWERTOOLS_DEV=="true"
-    monkeypatch.setenv(name="POWERTOOLS_DEV", value="true")
+    monkeypatch.setenv(name=constants.POWERTOOLS_DEV_ENV, value="true")
     logger = Logger(service=service_name, stream=stdout)
     logger.info("Test message")
     # THEN the json should contain more than line
