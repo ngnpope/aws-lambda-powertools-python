@@ -7,7 +7,6 @@ As soon as the version of botocore included with the Lambda runtime is equal or 
 this file completely. See https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html.
 """
 import logging
-from distutils.version import StrictVersion
 from io import IOBase
 from typing import Optional
 
@@ -19,12 +18,14 @@ from botocore.exceptions import (
     ReadTimeoutError,
     ResponseStreamingError,
 )
+from packaging.version import Version
+from packaging.version import parse as parse_version
 from urllib3.exceptions import ProtocolError as URLLib3ProtocolError
 from urllib3.exceptions import ReadTimeoutError as URLLib3ReadTimeoutError
 
 logger = logging.getLogger(__name__)
 
-if StrictVersion(botocore.__version__) < StrictVersion("1.29.13"):  # noqa: C901
+if parse_version(botocore.__version__) < Version("1.29.13"):  # noqa: C901
 
     class PowertoolsStreamingBody(IOBase):
         """Wrapper class for a HTTP response body.
