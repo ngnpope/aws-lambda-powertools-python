@@ -1,5 +1,5 @@
 import json
-import warnings
+import re
 from collections import namedtuple
 from typing import Any, Dict, List, Union
 
@@ -746,15 +746,13 @@ def test_log_metrics_decorator_no_metrics_warning(dimensions, namespace, service
     def lambda_handler(evt, context):
         pass
 
+    warning_message = (
+        "No application metrics to publish. The cold-start metric may be published if enabled. "
+        "If application metrics should never be empty, consider using 'raise_on_empty_metrics'"
+    )
     # THEN it should raise a warning instead of throwing an exception
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("default")
+    with pytest.warns(UserWarning, match=re.escape(warning_message)):
         lambda_handler({}, {})
-        assert len(w) == 1
-        assert str(w[-1].message) == (
-            "No application metrics to publish. The cold-start metric may be published if enabled. "
-            "If application metrics should never be empty, consider using 'raise_on_empty_metrics'"
-        )
 
 
 def test_log_metrics_with_implicit_dimensions_called_twice(capsys, metric, namespace, service):

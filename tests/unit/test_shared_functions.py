@@ -1,5 +1,5 @@
 import os
-import warnings
+import re
 from dataclasses import dataclass
 
 import pytest
@@ -52,11 +52,8 @@ def test_powertools_dev_warning(monkeypatch: pytest.MonkeyPatch):
 
     # WHEN set_package_logger is used at initialization
     # THEN a warning should be emitted
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("default")
+    with pytest.warns(UserWarning, match=re.escape(warning_message)):
         powertools_dev_is_set()
-        assert len(w) == 1
-        assert str(w[0].message) == warning_message
 
 
 def test_powertools_debug_warning(monkeypatch: pytest.MonkeyPatch):
@@ -66,11 +63,8 @@ def test_powertools_debug_warning(monkeypatch: pytest.MonkeyPatch):
 
     # WHEN set_package_logger is used at initialization
     # THEN a warning should be emitted
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("default")
+    with pytest.warns(UserWarning, match=re.escape(warning_message)):
         powertools_debug_is_set()
-        assert len(w) == 1
-        assert str(w[0].message) == warning_message
 
 
 def test_extract_event_dict():

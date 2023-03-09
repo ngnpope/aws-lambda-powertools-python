@@ -1,7 +1,7 @@
 import copy
 import datetime
+import re
 import sys
-import warnings
 from unittest.mock import MagicMock
 
 import jmespath
@@ -797,14 +797,12 @@ def test_idempotent_lambda_expires_in_progress_unavailable_remaining_time():
     def function(record):
         return expected_result
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("default")
+    warning_message = (
+        "Couldn't determine the remaining time left. Did you call register_lambda_context on IdempotencyConfig?"
+    )
+
+    with pytest.warns(UserWarning, match=re.escape(warning_message)):
         function(record=mock_event)
-        assert len(w) == 1
-        assert (
-            str(w[-1].message)
-            == "Couldn't determine the remaining time left. Did you call register_lambda_context on IdempotencyConfig?"
-        )
 
 
 def test_data_record_invalid_status_value():

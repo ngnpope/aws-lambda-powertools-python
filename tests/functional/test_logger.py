@@ -7,7 +7,6 @@ import random
 import re
 import string
 import sys
-import warnings
 from ast import Dict
 from collections import namedtuple
 from datetime import datetime, timezone
@@ -928,11 +927,8 @@ def test_powertools_debug_env_var_warning(monkeypatch: pytest.MonkeyPatch):
 
     # WHEN set_package_logger is used at initialization
     # THEN a warning should be emitted
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("default")
+    with pytest.warns(UserWarning, match=re.escape(warning_message)):
         set_package_logger_handler()
-        assert len(w) == 1
-        assert str(w[0].message) == warning_message
 
 
 def test_logger_log_uncaught_exceptions(service_name, stdout):
