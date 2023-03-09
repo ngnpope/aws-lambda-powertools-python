@@ -156,6 +156,10 @@ exclude = '''
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -vv"
+filterwarnings = [
+    "error",
+    "default:::aws_lambda_powertools",
+]
 testpaths = "./tests"
 markers = [
     "perf: marks perf tests to be deselected (deselect with '-m \"not perf\"')",
